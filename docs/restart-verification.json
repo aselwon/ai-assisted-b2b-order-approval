@@ -1,0 +1,89 @@
+{
+  "timestamp": "2026-09-29T11:38:42.135Z",
+  "request_id": "approval_01M3PEXK1WD26G29NJBZDRJR6H",
+  "status": "approved",
+  "decision_run_id": "analysis_01M3PEYEEABVYQC7K56GMDMT5A",
+  "runs": [
+    {
+      "id": "analysis_01M3PEYEEABVYQC7K56GMDMT5A",
+      "sequence": 2,
+      "status": "completed",
+      "provider": "demo",
+      "steps": [
+        {
+          "name": "policy",
+          "status": "completed",
+          "attempts": [
+            {
+              "number": 1,
+              "status": "completed",
+              "error_code": null
+            }
+          ]
+        },
+        {
+          "name": "risk",
+          "status": "completed",
+          "attempts": [
+            {
+              "number": 1,
+              "status": "completed",
+              "error_code": null
+            }
+          ]
+        },
+        {
+          "name": "recommendation",
+          "status": "completed",
+          "attempts": [
+            {
+              "number": 1,
+              "status": "completed",
+              "error_code": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "analysis_01M3PEXK21GC3VKK1524VMMJFD",
+      "sequence": 1,
+      "status": "error",
+      "provider": "demo",
+      "steps": [
+        {
+          "name": "policy",
+          "status": "completed",
+          "attempts": [
+            {
+              "number": 1,
+              "status": "completed",
+              "error_code": null
+            }
+          ]
+        },
+        {
+          "name": "risk",
+          "status": "error",
+          "attempts": [
+            {
+              "number": 1,
+              "status": "error",
+              "error_code": "simulated_provider_error"
+            },
+            {
+              "number": 2,
+              "status": "error",
+              "error_code": "simulated_provider_error"
+            }
+          ]
+        },
+        {
+          "name": "recommendation",
+          "status": "error",
+          "attempts": []
+        }
+      ]
+    }
+  ]
+}
