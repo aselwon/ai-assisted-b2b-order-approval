@@ -1,6 +1,6 @@
 # AI-Assisted B2B Order Approval
 
-A working **Medusa v2** portfolio demo: an employee submits a real cart, then Policy → Risk → Recommendation agents analyse it in sequence. Medusa Admin shows inputs, findings, attempts, errors and recommendations. **A human always makes the final decision.** Approval applies to a purchase snapshot; it does not complete checkout, place an order or charge a payment.
+A working **Medusa** portfolio demo: an employee submits a real cart, then Policy → Risk → Recommendation agents analyse it in sequence. Medusa Admin shows inputs, findings, attempts, errors and recommendations. **A human always makes the final decision.** Approval applies to a purchase snapshot; it does not complete checkout, place an order or charge a payment.
 
 ## Run locally
 
@@ -27,20 +27,20 @@ Keep your existing `.env` when updating. The seed is repeatable and does not res
 
 All demo accounts use the password `RigbyDemo2026!`. These are synthetic local demonstration accounts.
 
-- `buyer@acme.demo` — can submit requests for Acme; limit: PLN 1,000.
-- `buyer@other.demo` — another company; cannot access Acme requests.
-- `viewer@acme.demo` — can read their company's requests but cannot submit.
-- `approver@rigby.demo` — Admin with an explicit approval grant.
-- `staff@rigby.demo` — Admin without that grant; the API denies access.
+- `buyer@acme.demo` - can submit requests for Acme; limit: PLN 1,000.
+- `buyer@other.demo` - another company; cannot access Acme requests.
+- `viewer@acme.demo` - can read their company's requests but cannot submit.
+- `approver@rigby.demo` - Admin with an explicit approval grant.
+- `staff@rigby.demo` - Admin without that grant; the API denies access.
 
 ## Five-minute presentation
 
 Keep `AGENT_PROVIDER=demo`: this is a clearly labelled, predictable simulation without an API key. Open the buyer and Admin pages side by side and sign in as buyer/approver.
 
-1. **0:00–1:00 — /demo:** choose the routine purchase (`clean`), create a PLN 1,350 cart and submit it. Show its real cart ID, the PLN 1,000 limit and the pending status. In Admin, open the newest request with **Review**.
-2. **1:00–2:00 — /app/approvals:** show Policy, Risk and Recommendation in order, their statuses, sources, `deterministic-demo-v1` and the simulation label. Expand the Risk/Recommendation input contract to show the previous results being passed forward. The `approve` recommendation still leaves the request `pending`. Enter a reason and click **Approve**. The buyer sees `approved` automatically.
-3. **2:00–3:00 — buyer → Admin:** choose `manual`, a PLN 9,000 cart. Show the concrete high-value finding (>5× the limit), `manual_review` and the need for budget confirmation. Enter a reason and **Reject**. The buyer sees `rejected`.
-4. **3:00–4:30 — buyer → Admin:** choose `failure`. Policy completes, Risk records two failed attempts, Recommendation records a dependency error, and the result is `manual_review`. Choose **Retry analysis**: run #2 succeeds while run #1 remains available in history. Return to the current run before making a human decision with a reason.
+1. **0:00–1:00 - /demo:** choose the routine purchase (`clean`), create a PLN 1,350 cart and submit it. Show its real cart ID, the PLN 1,000 limit and the pending status. In Admin, open the newest request with **Review**.
+2. **1:00–2:00 - /app/approvals:** show Policy, Risk and Recommendation in order, their statuses, sources, `deterministic-demo-v1` and the simulation label. Expand the Risk/Recommendation input contract to show the previous results being passed forward. The `approve` recommendation still leaves the request `pending`. Enter a reason and click **Approve**. The buyer sees `approved` automatically.
+3. **2:00–3:00 - buyer → Admin:** choose `manual`, a PLN 9,000 cart. Show the concrete high-value finding (>5× the limit), `manual_review` and the need for budget confirmation. Enter a reason and **Reject**. The buyer sees `rejected`.
+4. **3:00–4:30 - buyer → Admin:** choose `failure`. Policy completes, Risk records two failed attempts, Recommendation records a dependency error, and the result is `manual_review`. Choose **Retry analysis**: run #2 succeeds while run #1 remains available in history. Return to the current run before making a human decision with a reason.
 5. **4:30–5:00:** show the final buyer statuses, `docs/live-verification.json` from a real OpenAI call, the tests and the diagram in [ARCHITECTURE.md](ARCHITECTURE.md). Do not present the simulation as a real LLM call.
 
 The worker checks PostgreSQL every 2 seconds; the UI refreshes automatically. The default simulation takes roughly 1 second per stage. Set `AGENT_DEMO_DELAY_MS=3000` and restart to make the running state easier to demonstrate. The simulated `failure` occurs only on the first analysis run so a retry can demonstrate recovery.
@@ -111,13 +111,13 @@ See [DELIVERY.md](DELIVERY.md) for actual results and limitations, and [ARCHITEC
 
 Medusa authentication: `/auth/customer/emailpass` for buyers, `/auth/user/emailpass` for administrators. `/b2b` routes use a customer Bearer token; Admin also supports sessions. These separate protected demo routes do not require a publishable key.
 
-- `POST /b2b/carts` with `{ "basket": "clean" | "manual" | "failure" | "injection" }` — creates a cart and controlled purchasing context. `over-limit` and `under-limit` also support threshold tests.
-- `GET /b2b/me` — company, permissions and provider mode; no secrets.
-- `POST /b2b/requests` with `{ "cart_id": "..." }` — creates a request and durable analysis queue entry. Amount, company, currency and limit are server-derived.
-- `GET /b2b/requests` and `GET /b2b/requests/:id` — own company only.
-- `GET /admin/approval-requests` and `GET /admin/approval-requests/:id` — authorised account manager; details include the full analysis history.
-- `POST /admin/approval-requests/:id/decision` with `{ "decision": "approved" | "rejected", "reason": "..." }` — one final human decision.
-- `POST /admin/approval-requests/:id/analysis/retry` with `{}` — a new run after an error, up to three runs, preserving history.
+- `POST /b2b/carts` with `{ "basket": "clean" | "manual" | "failure" | "injection" }` - creates a cart and controlled purchasing context. `over-limit` and `under-limit` also support threshold tests.
+- `GET /b2b/me` - company, permissions and provider mode; no secrets.
+- `POST /b2b/requests` with `{ "cart_id": "..." }` - creates a request and durable analysis queue entry. Amount, company, currency and limit are server-derived.
+- `GET /b2b/requests` and `GET /b2b/requests/:id` - own company only.
+- `GET /admin/approval-requests` and `GET /admin/approval-requests/:id` - authorised account manager; details include the full analysis history.
+- `POST /admin/approval-requests/:id/decision` with `{ "decision": "approved" | "rejected", "reason": "..." }` - one final human decision.
+- `POST /admin/approval-requests/:id/analysis/retry` with `{}` - a new run after an error, up to three runs, preserving history.
 
 CLI examples (the server worker must be running):
 
